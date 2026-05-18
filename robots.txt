@@ -1,4 +1,4 @@
 User-Agent: *
 Allow: /
 
-Sitemap: https://biddutmeter.vercel.app/sitemap.xml
+Sitemap: https://biddut-meter-site.vercel.app/sitemap.xml
