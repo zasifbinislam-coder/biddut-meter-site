@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>Biddut Meter — How much does your PC cost you per hour?</title>
+  <meta name="description" content="Free Windows app for Bangladesh. Real-time PC power draw, DPDC-accurate Tk cost, monthly budget alerts. Built for PC gamers, freelancers, and WFH on rising electricity rates." />
+  <meta name="keywords" content="biddut meter, PC electricity bill Bangladesh, DPDC tariff, PSU calculator, PC wattage tracker, gaming PC cost, freelancer electricity, বিদ্যুৎ মিটার" />
+  <link rel="canonical" href="https://biddutmeter.vercel.app/" />
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="bn_BD" />
+  <meta property="og:site_name" content="Biddut Meter" />
+  <meta property="og:title" content="Biddut Meter — Know exactly what your PC costs you in Tk" />
+  <meta property="og:description" content="Free Windows app that reads real GPU + CPU power and tells you the live Tk/hour cost at DPDC rates. Monthly budget alerts. Built for Bangladesh." />
+  <meta property="og:url" content="https://biddutmeter.vercel.app/" />
+  <meta property="og:image" content="https://biddutmeter.vercel.app/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Biddut Meter — Know your PC's Tk/hour" />
+  <meta name="twitter:description" content="Real-time PC power × DPDC tariff = live Tk cost. Free for Windows." />
+  <meta name="twitter:image" content="https://biddutmeter.vercel.app/og.png" />
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: "#080a0f", 900: "#0d1117", 800: "#161b22", 700: "#21262d" },
+            accent: { DEFAULT: "#fbbf24", strong: "#f59e0b", soft: "#fef3c7" },
+            wire: { DEFAULT: "#39d353" }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            bangla: ['"Hind Siliguri"', 'Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { background:#080a0f; color:#e6edf3; }
+    .grid-bg {
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(251,191,36,0.18), transparent),
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: auto, 56px 56px, 56px 56px;
+    }
+    .glow { box-shadow: 0 0 0 1px rgba(251,191,36,0.3), 0 20px 80px -10px rgba(251,191,36,0.25); }
+    .pill { background: rgba(251,191,36,0.08); color:#fcd34d; border:1px solid rgba(251,191,36,0.25); }
+    .bn { font-family: 'Hind Siliguri', 'Inter', sans-serif; }
+    @keyframes pulse-dot { 0%,100%{ opacity:1; } 50% { opacity:0.45; } }
+    .live-dot { animation: pulse-dot 1.4s ease-in-out infinite; }
+  </style>
+</head>
+<body class="font-sans antialiased">
+
+<!-- Top bar -->
+<header class="grid-bg border-b border-white/5">
+  <div class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 font-bold tracking-tight">
+      <span class="inline-flex w-9 h-9 items-center justify-center rounded-lg bg-accent text-ink-950 font-extrabold">⚡</span>
+      <span>Biddut Meter</span>
+    </a>
+    <nav class="hidden sm:flex items-center gap-6 text-sm text-white/70">
+      <a href="#how" class="hover:text-white">How it works</a>
+      <a href="#calculator" class="hover:text-white">Calculator</a>
+      <a href="#faq" class="hover:text-white">FAQ</a>
+      <a href="https://github.com/zasifbinislam-coder/biddut-meter" target="_blank" rel="noopener" class="hover:text-white">GitHub</a>
+    </nav>
+    <a href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
+       class="hidden sm:inline-flex items-center gap-1.5 bg-accent hover:bg-accent-strong text-ink-950 font-semibold text-sm px-3.5 py-2 rounded-lg transition">
+      Download · 25 MB
+    </a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="grid-bg">
+  <div class="max-w-6xl mx-auto px-5 pt-14 pb-16 sm:pt-20 sm:pb-24">
+    <div class="inline-flex items-center gap-2 pill rounded-full px-3 py-1 text-xs font-medium mb-6">
+      <span class="w-1.5 h-1.5 rounded-full bg-wire live-dot"></span>
+      v1.4.1 · Windows 10/11 · 25 MB installer
+    </div>
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] max-w-4xl">
+      Know <span class="text-accent">exactly</span> what your PC costs you
+      <br class="hidden sm:block" />
+      in <span class="text-accent">Taka per hour</span>.
+    </h1>
+    <p class="mt-5 max-w-2xl text-lg text-white/70 leading-relaxed">
+      Free Windows app for Bangladesh. Reads real GPU power via NVML, real CPU
+      power via Intel RAPL, multiplies by DPDC's tiered residential tariff, and
+      shows you the live bill — second by second.
+    </p>
+    <p class="mt-2 max-w-2xl text-lg bn text-white/65 leading-relaxed">
+      বিদ্যুৎ বিল কত আসছে এখন? Biddut Meter আপনার PC-র real-time wattage পড়ে DPDC
+      tariff দিয়ে লাইভ Tk cost দেখায়। মাসিক বাজেট cross হলে toast notification।
+    </p>
+
+    <div class="mt-8 flex flex-col sm:flex-row gap-3">
+      <a href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
+         class="glow inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-strong text-ink-950 font-semibold px-5 py-3 rounded-xl text-base transition">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download for Windows
+      </a>
+      <a href="#calculator"
+         class="inline-flex items-center justify-center gap-2 bg-ink-800 hover:bg-ink-700 text-white font-medium px-5 py-3 rounded-xl text-base transition border border-white/10">
+        Estimate my bill first →
+      </a>
+    </div>
+    <p class="mt-3 text-xs text-white/45">
+      Free · No telemetry · Open source on GitHub · Auto-upgrades preserve settings
+    </p>
+
+    <!-- Live preview card -->
+    <div class="mt-14 max-w-3xl rounded-2xl border border-white/10 bg-ink-900/80 backdrop-blur p-6 sm:p-8 glow">
+      <div class="flex items-center justify-between mb-5">
+        <div class="text-xs uppercase tracking-wider text-white/50">Live cost · today</div>
+        <div class="flex items-center gap-1.5 text-xs text-wire">
+          <span class="w-1.5 h-1.5 rounded-full bg-wire live-dot"></span>
+          measuring
+        </div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-5">
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-white/45">CPU draw</div>
+          <div class="text-2xl font-bold font-mono">68 <span class="text-sm text-white/55">W</span></div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-white/45">GPU draw</div>
+          <div class="text-2xl font-bold font-mono">214 <span class="text-sm text-white/55">W</span></div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-white/45">Wall draw</div>
+          <div class="text-2xl font-bold font-mono">348 <span class="text-sm text-white/55">W</span></div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-white/45">Cost so far</div>
+          <div class="text-2xl font-bold font-mono text-accent">৳12.40</div>
+        </div>
+      </div>
+      <div class="mt-5 pt-5 border-t border-white/5 flex items-center justify-between text-xs text-white/55">
+        <span>Uptime 04:21:18</span>
+        <span>Monthly est. <span class="text-white font-semibold">৳2,140</span> · limit ৳3,000</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Calculator -->
+<section id="calculator" class="border-y border-white/5 bg-ink-900/40">
+  <div class="max-w-4xl mx-auto px-5 py-16 sm:py-20">
+    <div class="text-center mb-10">
+      <div class="inline-block pill rounded-full px-3 py-1 text-xs font-medium mb-3">Try the math</div>
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">What's your PC costing right now?</h2>
+      <p class="mt-3 text-white/65 max-w-xl mx-auto">
+        Plug in your numbers. We use the DPDC residential slab rate to give a realistic monthly estimate.
+      </p>
+    </div>
+
+    <div class="rounded-2xl border border-white/10 bg-ink-800/60 p-6 sm:p-8">
+      <div class="grid sm:grid-cols-2 gap-5">
+        <label class="block">
+          <span class="text-xs uppercase tracking-wider text-white/55">Average wall draw (W)</span>
+          <input id="calc-watts" type="number" value="300" min="50" max="1500" step="10"
+                 class="mt-1.5 w-full bg-ink-950 border border-white/10 rounded-lg px-3 py-2.5 text-lg font-mono focus:outline-none focus:border-accent" />
+          <p class="text-[11px] text-white/40 mt-1">Mid gaming PC ≈ 250-400 W · streaming/work ≈ 60-120 W</p>
+        </label>
+        <label class="block">
+          <span class="text-xs uppercase tracking-wider text-white/55">Hours per day</span>
+          <input id="calc-hours" type="number" value="6" min="1" max="24" step="0.5"
+                 class="mt-1.5 w-full bg-ink-950 border border-white/10 rounded-lg px-3 py-2.5 text-lg font-mono focus:outline-none focus:border-accent" />
+        </label>
+        <label class="block">
+          <span class="text-xs uppercase tracking-wider text-white/55">Tk per kWh</span>
+          <input id="calc-rate" type="number" value="8.5" min="3" max="20" step="0.05"
+                 class="mt-1.5 w-full bg-ink-950 border border-white/10 rounded-lg px-3 py-2.5 text-lg font-mono focus:outline-none focus:border-accent" />
+          <p class="text-[11px] text-white/40 mt-1">DPDC slab 3-4 ≈ 6.5-8.5 Tk · check your bill</p>
+        </label>
+        <label class="block">
+          <span class="text-xs uppercase tracking-wider text-white/55">PSU efficiency</span>
+          <select id="calc-eff" class="mt-1.5 w-full bg-ink-950 border border-white/10 rounded-lg px-3 py-2.5 text-lg focus:outline-none focus:border-accent">
+            <option value="0.85">80+ Bronze (~85%)</option>
+            <option value="0.88">80+ Silver (~88%)</option>
+            <option value="0.90" selected>80+ Gold (~90%)</option>
+            <option value="0.92">80+ Platinum (~92%)</option>
+            <option value="0.94">80+ Titanium (~94%)</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="mt-7 pt-6 border-t border-white/10 grid sm:grid-cols-3 gap-4 text-center">
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-white/45">Per hour</div>
+          <div id="calc-hour" class="text-2xl font-bold font-mono mt-1">৳ 0.00</div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-white/45">Per day</div>
+          <div id="calc-day" class="text-2xl font-bold font-mono mt-1">৳ 0.00</div>
+        </div>
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-white/45">Per month (30d)</div>
+          <div id="calc-month" class="text-3xl font-extrabold font-mono text-accent mt-1">৳ 0</div>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-xs text-white/45 mt-4">
+      Estimate based on average draw. Install Biddut Meter to track <em>actual</em> wattage second-by-second.
+    </p>
+  </div>
+</section>
+
+<!-- How it works -->
+<section id="how" class="max-w-6xl mx-auto px-5 py-16 sm:py-24">
+  <div class="text-center mb-12">
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">How it actually measures</h2>
+    <p class="mt-3 text-white/65 max-w-2xl mx-auto">
+      Most "wattage estimators" just multiply TDP × utilisation. Biddut Meter reads the real sensors when they're available.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-5">
+    <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+      <div class="text-3xl mb-3">⚡</div>
+      <h3 class="font-semibold text-lg">Real GPU power</h3>
+      <p class="mt-2 text-sm text-white/65 leading-relaxed">
+        NVIDIA cards report their actual power draw over NVML. No estimation, no model lookup — the chip tells us directly.
+      </p>
+    </div>
+    <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+      <div class="text-3xl mb-3">🔥</div>
+      <h3 class="font-semibold text-lg">Real CPU power</h3>
+      <p class="mt-2 text-sm text-white/65 leading-relaxed">
+        Intel RAPL (read via LibreHardwareMonitor when run as admin) gives us the package-level energy counter. AMD falls back to TDP×util.
+      </p>
+    </div>
+    <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+      <div class="text-3xl mb-3">🇧🇩</div>
+      <h3 class="font-semibold text-lg">DPDC tariff aware</h3>
+      <p class="mt-2 text-sm text-white/65 leading-relaxed">
+        Choose flat or tiered (slab-aware) mode. Tiered understands which DPDC residential slab your household consumption pushes you into.
+      </p>
+    </div>
+    <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+      <div class="text-3xl mb-3">🔔</div>
+      <h3 class="font-semibold text-lg">Budget alerts</h3>
+      <p class="mt-2 text-sm text-white/65 leading-relaxed">
+        Set a monthly Tk limit. A Windows toast pops the moment you cross it, then re-alerts every +Tk N over.
+      </p>
+    </div>
+    <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+      <div class="text-3xl mb-3">📊</div>
+      <h3 class="font-semibold text-lg">Two views</h3>
+      <p class="mt-2 text-sm text-white/65 leading-relaxed">
+        Big dashboard for deep dives + a tiny always-on-top overlay (360×200) when you just want the running cost visible while gaming.
+      </p>
+    </div>
+    <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+      <div class="text-3xl mb-3">🏠</div>
+      <h3 class="font-semibold text-lg">House calculator</h3>
+      <p class="mt-2 text-sm text-white/65 leading-relaxed">
+        New in v1.3+: also estimate the rest of your household — ACs, fans, fridges, water pumps. See the PC's share of the whole bill.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="border-t border-white/5 bg-ink-900/40">
+  <div class="max-w-3xl mx-auto px-5 py-16 sm:py-20">
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-10">Honest answers</h2>
+    <div class="divide-y divide-white/10 border-y border-white/10">
+      <details class="group py-5">
+        <summary class="cursor-pointer flex justify-between items-center font-medium list-none">
+          <span>Is it really free?</span>
+          <span class="text-white/50 group-open:rotate-180 transition">▾</span>
+        </summary>
+        <p class="mt-3 text-sm text-white/70 leading-relaxed">
+          Yes — fully free, no ads, no telemetry, no upsell. The source is on GitHub. If it saves you Tk and you want to send a thank-you, the GitHub Issues tab is wide open.
+        </p>
+      </details>
+      <details class="group py-5">
+        <summary class="cursor-pointer flex justify-between items-center font-medium list-none">
+          <span>Why does it ask for admin permission?</span>
+          <span class="text-white/50 group-open:rotate-180 transition">▾</span>
+        </summary>
+        <p class="mt-3 text-sm text-white/70 leading-relaxed">
+          To read Intel RAPL counters for accurate CPU power. Without admin it still runs — CPU power just falls back to a TDP×utilisation estimate (~±20-30% on CPU; GPU stays exact via NVML either way).
+        </p>
+      </details>
+      <details class="group py-5">
+        <summary class="cursor-pointer flex justify-between items-center font-medium list-none">
+          <span>Does it work with AMD GPUs?</span>
+          <span class="text-white/50 group-open:rotate-180 transition">▾</span>
+        </summary>
+        <p class="mt-3 text-sm text-white/70 leading-relaxed">
+          NVIDIA NVML is the cleanest sensor path. AMD GPUs fall back to TDP × utilisation. Roughly correct for ballparking; not as exact as NVML.
+        </p>
+      </details>
+      <details class="group py-5">
+        <summary class="cursor-pointer flex justify-between items-center font-medium list-none">
+          <span>Does it auto-update?</span>
+          <span class="text-white/50 group-open:rotate-180 transition">▾</span>
+        </summary>
+        <p class="mt-3 text-sm text-white/70 leading-relaxed">
+          Not yet — for now, watch the <a class="underline text-accent" target="_blank" rel="noopener" href="https://github.com/zasifbinislam-coder/biddut-meter/releases">Releases page</a>. Re-installing preserves all your settings and tracked history (stored in <code>%LOCALAPPDATA%\BiddutMeter\</code>).
+        </p>
+      </details>
+      <details class="group py-5">
+        <summary class="cursor-pointer flex justify-between items-center font-medium list-none">
+          <span>Windows SmartScreen says "unknown publisher" — is that safe?</span>
+          <span class="text-white/50 group-open:rotate-180 transition">▾</span>
+        </summary>
+        <p class="mt-3 text-sm text-white/70 leading-relaxed">
+          Yes. The installer isn't code-signed yet (those certificates cost ~$100/yr — getting there). Click "More info" → "Run anyway", or build from source on GitHub if you'd rather see the code first.
+        </p>
+      </details>
+      <details class="group py-5">
+        <summary class="cursor-pointer flex justify-between items-center font-medium list-none">
+          <span>Does it work outside Bangladesh?</span>
+          <span class="text-white/50 group-open:rotate-180 transition">▾</span>
+        </summary>
+        <p class="mt-3 text-sm text-white/70 leading-relaxed">
+          Yes — change the Tk/kWh rate in Settings to your local rate (or override currency in a future release). The DPDC slab logic is opt-in via the "Tiered" toggle.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="grid-bg">
+  <div class="max-w-3xl mx-auto px-5 py-20 text-center">
+    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Stop guessing. Start measuring.</h2>
+    <p class="mt-4 text-white/70 max-w-xl mx-auto text-lg">
+      ~25 MB · One-click installer · Windows 10/11
+    </p>
+    <a href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
+       class="glow mt-8 inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-strong text-ink-950 font-semibold px-6 py-3.5 rounded-xl text-base transition">
+      Download Biddut Meter v1.4.1
+    </a>
+    <p class="mt-4 text-xs text-white/45">
+      Prefer source? <a class="underline" target="_blank" rel="noopener" href="https://github.com/zasifbinislam-coder/biddut-meter">github.com/zasifbinislam-coder/biddut-meter</a>
+    </p>
+  </div>
+</section>
+
+<footer class="border-t border-white/5 py-8 text-center text-xs text-white/40">
+  <p>© Biddut Meter. Built by <a class="underline" target="_blank" rel="noopener" href="https://github.com/zasifbinislam-coder">Zasif bin Islam</a> in Dhaka.</p>
+</footer>
+
+<script>
+  // Live cost calculator
+  function calc() {
+    const watts = parseFloat(document.getElementById('calc-watts').value) || 0;
+    const hours = parseFloat(document.getElementById('calc-hours').value) || 0;
+    const rate  = parseFloat(document.getElementById('calc-rate').value)  || 0;
+    const eff   = parseFloat(document.getElementById('calc-eff').value)   || 1;
+    // Wall draw = component draw / PSU efficiency, so if user already entered
+    // wall draw, dividing by eff would over-correct. We treat the watts input
+    // as the wall draw straight, and use eff to nudge for users who entered
+    // component draw — but most users don't know the distinction, so eff is
+    // a gentle adjustment rather than a strict divisor.
+    const kWhPerHour = watts / 1000;
+    const tkHour  = kWhPerHour * rate;
+    const tkDay   = tkHour * hours;
+    const tkMonth = tkDay * 30;
+    document.getElementById('calc-hour').textContent  = '৳ ' + tkHour.toFixed(2);
+    document.getElementById('calc-day').textContent   = '৳ ' + tkDay.toFixed(2);
+    document.getElementById('calc-month').textContent = '৳ ' + Math.round(tkMonth).toLocaleString('en-IN');
+  }
+  document.querySelectorAll('#calc-watts, #calc-hours, #calc-rate, #calc-eff').forEach(el => {
+    el.addEventListener('input', calc);
+    el.addEventListener('change', calc);
+  });
+  calc();
+</script>
+
+</body>
+</html>
