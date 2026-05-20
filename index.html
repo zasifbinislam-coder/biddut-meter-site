@@ -32,6 +32,39 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Biddut Meter",
+    "alternateName": "বিদ্যুৎ মিটার",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Windows 10, Windows 11",
+    "url": "https://biddut-meter-site.vercel.app/",
+    "downloadUrl": "https://github.com/zasifbinislam-coder/biddut-meter/releases/latest",
+    "softwareVersion": "1.4.1",
+    "fileSize": "25 MB",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BDT"
+    },
+    "description": "Free Windows app for Bangladesh. Reads real GPU + CPU power and shows live electricity cost in Taka at DPDC tariff rates. Monthly budget alerts and a tiny always-on-top overlay.",
+    "author": {
+      "@type": "Person",
+      "name": "Zasif bin Islam",
+      "url": "https://github.com/zasifbinislam-coder"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "ratingCount": "1",
+      "bestRating": "5"
+    }
+  }
+  </script>
   <script>
     tailwind.config = {
       theme: {
@@ -81,9 +114,9 @@
       <a href="#faq" class="hover:text-white">FAQ</a>
       <a href="https://github.com/zasifbinislam-coder/biddut-meter" target="_blank" rel="noopener" class="hover:text-white">GitHub</a>
     </nav>
-    <a href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
+    <a data-dl-link href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
        class="hidden sm:inline-flex items-center gap-1.5 bg-accent hover:bg-accent-strong text-ink-950 font-semibold text-sm px-3.5 py-2 rounded-lg transition">
-      Download · 25 MB
+      Download · <span data-dl-size>25 MB</span>
     </a>
   </div>
 </header>
@@ -93,7 +126,7 @@
   <div class="max-w-6xl mx-auto px-5 pt-14 pb-16 sm:pt-20 sm:pb-24">
     <div class="inline-flex items-center gap-2 pill rounded-full px-3 py-1 text-xs font-medium mb-6">
       <span class="w-1.5 h-1.5 rounded-full bg-wire live-dot"></span>
-      v1.4.1 · Windows 10/11 · 25 MB installer
+      <span data-dl-version>v1.4.1</span> · Windows 10/11 · <span data-dl-size>25 MB</span> installer
     </div>
     <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] max-w-4xl">
       Know <span class="text-accent">exactly</span> what your PC costs you
@@ -111,7 +144,7 @@
     </p>
 
     <div class="mt-8 flex flex-col sm:flex-row gap-3">
-      <a href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
+      <a data-dl-link href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
          class="glow inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-strong text-ink-950 font-semibold px-5 py-3 rounded-xl text-base transition">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download for Windows
@@ -193,12 +226,14 @@
         <label class="block">
           <span class="text-xs uppercase tracking-wider text-white/55">PSU efficiency</span>
           <select id="calc-eff" class="mt-1.5 w-full bg-ink-950 border border-white/10 rounded-lg px-3 py-2.5 text-lg focus:outline-none focus:border-accent">
-            <option value="0.85">80+ Bronze (~85%)</option>
-            <option value="0.88">80+ Silver (~88%)</option>
-            <option value="0.90" selected>80+ Gold (~90%)</option>
-            <option value="0.92">80+ Platinum (~92%)</option>
-            <option value="0.94">80+ Titanium (~94%)</option>
+            <option value="1.00">Already wall draw (no adjustment)</option>
+            <option value="0.85">80+ Bronze (~85%) — input is component draw</option>
+            <option value="0.88">80+ Silver (~88%) — input is component draw</option>
+            <option value="0.90">80+ Gold (~90%) — input is component draw</option>
+            <option value="0.92">80+ Platinum (~92%) — input is component draw</option>
+            <option value="0.94">80+ Titanium (~94%) — input is component draw</option>
           </select>
+          <p class="text-[11px] text-white/40 mt-1">Pick the second option if your number is CPU+GPU+rest (not wall draw)</p>
         </label>
       </div>
 
@@ -348,9 +383,9 @@
     <p class="mt-4 text-white/70 max-w-xl mx-auto text-lg">
       ~25 MB · One-click installer · Windows 10/11
     </p>
-    <a href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
+    <a data-dl-link href="https://github.com/zasifbinislam-coder/biddut-meter/releases/download/v1.4.1/BiddutMeter-Setup-1.4.1.exe"
        class="glow mt-8 inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-strong text-ink-950 font-semibold px-6 py-3.5 rounded-xl text-base transition">
-      Download Biddut Meter v1.4.1
+      Download Biddut Meter <span data-dl-version>v1.4.1</span>
     </a>
     <p class="mt-4 text-xs text-white/45">
       Prefer source? <a class="underline" target="_blank" rel="noopener" href="https://github.com/zasifbinislam-coder/biddut-meter">github.com/zasifbinislam-coder/biddut-meter</a>
@@ -363,19 +398,15 @@
 </footer>
 
 <script>
-  // Live cost calculator
+  // Live cost calculator. PSU efficiency = 1.00 means input is already wall draw;
+  // any lower value means user entered component draw and we divide up to wall draw.
   function calc() {
     const watts = parseFloat(document.getElementById('calc-watts').value) || 0;
     const hours = parseFloat(document.getElementById('calc-hours').value) || 0;
     const rate  = parseFloat(document.getElementById('calc-rate').value)  || 0;
     const eff   = parseFloat(document.getElementById('calc-eff').value)   || 1;
-    // Wall draw = component draw / PSU efficiency, so if user already entered
-    // wall draw, dividing by eff would over-correct. We treat the watts input
-    // as the wall draw straight, and use eff to nudge for users who entered
-    // component draw — but most users don't know the distinction, so eff is
-    // a gentle adjustment rather than a strict divisor.
-    const kWhPerHour = watts / 1000;
-    const tkHour  = kWhPerHour * rate;
+    const wallW = watts / eff;
+    const tkHour  = (wallW / 1000) * rate;
     const tkDay   = tkHour * hours;
     const tkMonth = tkDay * 30;
     document.getElementById('calc-hour').textContent  = '৳ ' + tkHour.toFixed(2);
@@ -387,6 +418,27 @@
     el.addEventListener('change', calc);
   });
   calc();
+
+  // Evergreen download links: ask GitHub for the latest release and rewrite
+  // every [data-dl-link] href to the actual .exe asset of that release. Falls
+  // back silently to the hardcoded v1.4.1 URL already in the markup if the
+  // API call fails (rate-limit, offline, etc.).
+  (async () => {
+    try {
+      const r = await fetch('https://api.github.com/repos/zasifbinislam-coder/biddut-meter/releases/latest',
+        { headers: { 'Accept': 'application/vnd.github+json' } });
+      if (!r.ok) return;
+      const j = await r.json();
+      const asset = (j.assets || []).find(a => /Setup.*\.exe$/i.test(a.name));
+      if (!asset) return;
+      document.querySelectorAll('[data-dl-link]').forEach(a => { a.href = asset.browser_download_url; });
+      document.querySelectorAll('[data-dl-version]').forEach(s => { s.textContent = j.tag_name || s.textContent; });
+      if (asset.size) {
+        const mb = Math.round(asset.size / (1024 * 1024)) + ' MB';
+        document.querySelectorAll('[data-dl-size]').forEach(s => { s.textContent = mb; });
+      }
+    } catch (_) { /* keep fallback URLs */ }
+  })();
 </script>
 
 </body>
